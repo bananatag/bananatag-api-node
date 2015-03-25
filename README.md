@@ -13,12 +13,7 @@ $ npm install bananatag-api
 #### Get All Tags
 ```javascript
 var BTagAPI = require('../lib/btag.js');
-var credentails = {
-    authID: '421231b6c7857ffd1',
-    key: '4f614vR41y541d9632109a5b'
-};
-
-var btag = new BTagAPI(credentails.authID, credentails.key);
+var btag = new BTagAPI('Your AuthID', 'Your Key);
 
 btag.request('tags', {}, function (err, data) {
     if (!err) {
@@ -28,8 +23,16 @@ btag.request('tags', {}, function (err, data) {
 ```
 
 #### Get Aggregate Stats Over Date-Range
+```javascript
+var BTagAPI = require('../lib/btag.js');
+var btag = new BTagAPI('Your AuthID', 'Your Key);
 
-#### Send Tracked Email
+btag.request('tags', {start:'2013-01-01', end:'2014-03-30'}, function (err, data) {
+    if (!err) {
+        console.log(data);
+    }
+});
+```
 
 ### Running Tests
 To run the test suite first invoke the following command within the repo,
