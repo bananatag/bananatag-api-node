@@ -1,5 +1,5 @@
 {
-  "name": "Bananatag-API-Library",
+  "name": "bananatag-api",
   "version": "1.0.0",
   "description": "A small package used in conjunction with the Bananatag API which allows you to access your Bananatag data from your own applications.",
   "main": "lib/btag.js",
