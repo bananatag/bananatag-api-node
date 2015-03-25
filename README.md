@@ -13,7 +13,7 @@ $ npm install bananatag-api
 #### Get All Tags
 ```javascript
 var BTagAPI = require('../lib/btag.js');
-var btag = new BTagAPI('Your AuthID', 'Your Key);
+var btag = new BTagAPI('Your AuthID', 'Your Key');
 
 btag.request('tags', {}, function (err, data) {
     if (!err) {
@@ -25,9 +25,9 @@ btag.request('tags', {}, function (err, data) {
 #### Get Aggregate Stats Over Date-Range
 ```javascript
 var BTagAPI = require('../lib/btag.js');
-var btag = new BTagAPI('Your AuthID', 'Your Key);
+var btag = new BTagAPI('Your AuthID', 'Your Key');
 
-btag.request('tags', {start:'2013-01-01', end:'2014-03-30'}, function (err, data) {
+btag.request('tags', {start: '2013-01-01', end: '2014-03-30', aggregateData: true}, function (err, data) {
     if (!err) {
         console.log(data);
     }
