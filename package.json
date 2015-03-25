@@ -1,0 +1,31 @@
+{
+  "name": "Bananatag-API-Library",
+  "version": "1.0.0",
+  "description": "A small package used in conjunction with the Bananatag API which allows you to access your Bananatag data from your own applications.",
+  "main": "lib/btag.js",
+  "engine": "node 0.12.1",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/basic"
+  },
+  "keywords": [
+    "Bananatag",
+    "API",
+    "Node"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brentertz/scapegoat.git"
+  },
+  "author": "Bananatag.com",
+  "license": "MIT",
+  "dependencies": {
+    "crypto": "*",
+    "request": "^2.54.0",
+    "mailcomposer": ">=0.2.12",
+    "async": ">= 0.9.2"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": ">= 0.0.1"
+  }
+}
