@@ -11,12 +11,15 @@ $ npm install bananatag-api
 This library has a single method that requires either three for four parameters:
 
 ```javascript
-btag.request(
-    endPoint,             // The request endpoint
-    params,               // The request parameters
-    options | callback,   // If options are set then the callback is the next param
-    callback              // Callback
-)
+/**
+ * Check data and setup makeRequest
+ * @param {string} endpoint
+ * @param {object} params
+ * @param {object|function} options
+ * @param {bool} options.getAllResults
+ * @param {function} callback
+ */
+BtagAPI.request = function (endpoint, params, options, callback) {};
 ```
 
 #### Pagination
@@ -29,19 +32,28 @@ Response data from the API is paginated. This library can assist with retrieving
 #### Callback parameters
 The callback parameter in the ```request``` method handles the response. 
 ```javascript
+
+/**
+* @param {string} err
+* @param {string} data     JSON string
+* @param {int} cursor      Where the returned results end and the next request should start.
+* @param {int} total       Total records
+*/
+var callback = function (err, data, cursor, total) {
+   console.log(cursor); // used to fetch the next page manually (see below)
+   console.log(total); // used to fetch the next page manually
+};
+
 btag.request(
-    endPoint,             // The request endpoint
-    params,               // The request parameters
-    options | callback,   // If options are set then the callback is the next param
-    function (err, data, cursor, total) {
-        console.log(cursor); // used to fetch the next page manually (see below)
-        console.log(total); // used to fetch the next page manually
-    }
+    endPoint,                      // The request endpoint
+    params,                        // The request parameters
+    {getAllResults: false},        // If options are set then the callback is the next param
+    callback
 )
 ```
 
 #### Pagination
-See examples below.
+*See examples below.*
 
 ### Usage
 
@@ -59,7 +71,13 @@ btag.request('tags', {}, function (err, data) {
 
 #### Get Aggregate Stats Over Date-Range
 ```javascript
-btag.request('tags', {start: '2013-01-01', end: '2014-03-30', aggregateData: true}, function (err, data) {
+var params = {
+    start: '2013-01-01',
+    end: '2014-03-30', 
+    aggregateData: true
+};
+
+btag.request('tags', params, function (err, data) {
     if (!err) {
         console.log(data);
     }
@@ -84,24 +102,17 @@ To automatically get pass in an options argument into the third parameter of the
 
 ```javascript
 // Simple function to demonstrate manually retrieving the next page of results.
-function getTags(params, i) {
-
+function getTags(i) {
     btag.request('tags', params, {getAllResults: true}, function (err, data, cursor, total) {
-        console.log(cursor);
-        console.log(total);
-        
         if (i <= 1 && cursor < total) {
             setTimeout(function() {
-                params.next = cursor;
-                params.total = total;
-            
-                getTags(params, (i += 1));
+                getTags((i += 1));
             }, 1200);
         }
     });
 }
 
-getTags({}, 0};
+getTags(0};
 ```
 
 ### Running Tests
