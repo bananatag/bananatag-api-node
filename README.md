@@ -118,7 +118,7 @@ function getTags(i) {
     });
 }
 
-getTags(0};
+getTags(0);
 ```
 
 ### Running Tests
