@@ -24,7 +24,7 @@ BtagAPI.request = function (endpoint, params, options, callback) {};
 #### Parameters
 *Please see documentation for pagination details.*
 
-#### Option
+#### Options
 *Please see documentation for pagination details.*
 
 #### Callback parameters
@@ -84,9 +84,9 @@ btag.request('tags', params, function (err, data) {
 });
 ```
 
-#### Automatically fetch the next page of results (until entire result set is returned)
-To automatically get pass in an options argument into the third parameter of the .request method.
-```getAllResults``` option is a boolean and defaults to false.
+#### Automatically fetch the next page of results
+To automatically get all pages a result, pass in an options argument into the third parameter of the .request method.
+Set ```getAllResults``` property of this parameter to true (defaults to false).
 
 ```javascript
 btag.request('tags', params, {getAllResults: true}, function (err, data, cursor, total) {
@@ -97,11 +97,17 @@ btag.request('tags', params, {getAllResults: true}, function (err, data, cursor,
 ```
 
 #### Manually fetch the next page of results 
-To automatically get pass in an options argument into the third parameter of the .request method.
-```getAllResults``` option is a boolean and defaults to false.
+To manually get the next page, set ```params.next = cursor``` (```cursor``` is returned from API). Or, if you are
+making the request in the same session, you can simply call ```btag.request``` again.
 
 ```javascript
 // Simple function to demonstrate manually retrieving the next page of results.
+var params = {
+    start: '2013-01-01',
+    end: '2014-03-30', 
+    next: 0 // Default value is 0
+};
+
 function getTags(i) {
     btag.request('tags', params, {getAllResults: true}, function (err, data, cursor, total) {
         if (i <= 1 && cursor < total) {
