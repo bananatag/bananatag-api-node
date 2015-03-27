@@ -6,8 +6,7 @@ Node Library for the Bananatag API
 $ npm install bananatag-api
 ```
 
-### Request (methods and options)
-#### Request Method
+### Request / Response (methods and options)
 This library has a single method that requires either three for four parameters:
 
 ```javascript
@@ -22,12 +21,11 @@ This library has a single method that requires either three for four parameters:
 BtagAPI.request = function (endpoint, params, options, callback) {};
 ```
 
-#### Pagination
+#### Parameters
 *Please see documentation for pagination details.*
 
-Response data from the API is paginated. This library can assist with retrieving a single page at a time or getting all pages at once. To automatically fetch the next page until all results have been returned, use set ```options.getAllResults = true``` before making the request. The API restricts requests to 1 per second so this library delays each request accordingly.
-
-### Response
+#### Option
+*Please see documentation for pagination details.*
 
 #### Callback parameters
 The callback parameter in the ```request``` method handles the response. 
@@ -53,6 +51,8 @@ btag.request(
 ```
 
 #### Pagination
+Response data from the API is paginated. This library can assist with retrieving a single page at a time or getting all pages at once. To automatically fetch the next page until all results have been returned, use set ```options.getAllResults = true``` before making the request. The API restricts requests to 1 per second so this library delays each request accordingly.
+
 *See examples below.*
 
 ### Usage
