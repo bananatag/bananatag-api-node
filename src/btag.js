@@ -10,17 +10,19 @@ export default class BtagAPI {
      * Constructor
      * @param id
      * @param key
+     * @param staging (default: false)
      */
-    constructor(id, key) {
+    constructor(id, key, staging = false) {
         if (!id || !key) {
             throw new Error('401 (Unauthorized): You must provide both an authID and access key.');
         }
 
         this._id = id;
         this._key = key;
-        this._baseUrl = 'http://localhost:8080/'; // "https://api.bananatag.com/";
         this._requests = {};
         this._mailcomposer = MailComposer({ forceEmbeddedImages: true });
+        this._baseUrl = (staging) ? 'http://localhost:8080/' : 'https://api.bananatag.com/';
+
 
         /**
          * Send GET/POST/PUT makeRequest, parse json response and call callback with returned data
