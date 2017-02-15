@@ -1,7 +1,7 @@
 import assert from 'assert';
 import BtagAPI from '../src/btag';
 
-const btag = new BtagAPI('695335ad9046277', 'bdfb8aabccc045546159b8cfc0cca10f', true);
+const btag = new BtagAPI('api id here', 'api key here');
 
 describe('Email', function () {
     this.timeout(50000);
