@@ -20,7 +20,6 @@ export default class BtagAPI {
         this._id = id;
         this._key = key;
         this._requests = {};
-        this._mailcomposer = MailComposer({ forceEmbeddedImages: true });
         this._baseUrl = (staging) ? 'http://localhost:8080/' : 'https://api.bananatag.com/';
 
 
@@ -92,11 +91,6 @@ export default class BtagAPI {
             // Create the params for the request (need to include the cursor)
             data = querystring.parse(data);
 
-            // Set default of rtn to json
-            if (data.rtn === undefined) {
-                data.rtn = 'json';
-            }
-
             if (this._requests[session] === undefined) {
                 this._requests[session] = {
                     params: data,
@@ -120,7 +114,14 @@ export default class BtagAPI {
                 data.total = this._requests[session].total;
             }
 
-            data.cursor = this._requests[session].next;
+            if (endpoint !== 'tags/send') {
+                // Set default of rtn to json
+                if (data.rtn === undefined) {
+                    data.rtn = 'json';
+                }
+
+                data.cursor = this._requests[session].next;
+            }
 
             if (callback) {
                 // Generate signature
@@ -304,7 +305,9 @@ export default class BtagAPI {
     }
 
     buildMessage(params, callback) {
-        const data = {};
+        const data = {
+            forceEmbeddedImages: true
+        };
 
         if (params.from === undefined) {
             throw new Error("You must specify the 'from' parameter.");
@@ -313,7 +316,6 @@ export default class BtagAPI {
         } else if (params.html === undefined) {
             throw new Error("You must include the 'html' parameter.");
         } else if (params.text === undefined) {
-            // TODO: make sure it is plaintext
             data.body = params.text;
         }
 
@@ -363,11 +365,11 @@ export default class BtagAPI {
             },
             // set basic email headers
             (next) => {
-                next(null, this._mailcomposer(data));
+                next(null, MailComposer(data));
             },
-            (next) => {
+            (mail, next) => {
                 // build the message into a mime message raw string
-                this._mailcomposer.build(next);
+                mail.build(next);
             }
         ], (err, messageSource) => {
             if (err) {
@@ -375,7 +377,7 @@ export default class BtagAPI {
             }
 
             // return Mime message as base64 encoded string
-            callback(new Buffer(messageSource).toString('base64'));
+            callback(null, messageSource.toString('base64'));
         });
     }
 }
