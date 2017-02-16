@@ -53,8 +53,18 @@ export default class BtagAPI {
                     return;
                 }
 
-                if (Math.floor(body.code / 100) >= 4) {
-                    callback(new Error(`${body.code} (${body.error}): ${body.message}`));
+                if (body === undefined) {
+                    callback({
+                        statusCode: 404,
+                        error: 'No content found.',
+                        message: 'Failed to find any results.'
+                    });
+
+                    return;
+                }
+
+                if (Math.floor(body.statusCode / 100) >= 4) {
+                    callback(body);
                     return;
                 }
 
@@ -188,7 +198,11 @@ export default class BtagAPI {
                 (next) => {
                     if (data.start !== undefined && data.end !== undefined) {
                         if ((Date.parse(data.start) / 1000) > (Date.parse(data.end) / 1000)) {
-                            next(new Error('400 (Bad request): Error with provided parameters; Start date is greater than end date.'));
+                            next({
+                                statusCode: 400,
+                                error: 'Bad Request',
+                                message: 'Error with provided parameters; Start date is greater than end date.'
+                            });
                             return;
                         }
                     }
@@ -256,7 +270,11 @@ export default class BtagAPI {
             if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
                 callback(null);
             } else {
-                callback(new Error('400 (Bad request): Error with provided parameters; Date string must be in format yyyy-mm-dd.'));
+                callback({
+                    statusCode: 400,
+                    error: 'Bad Request',
+                    message: 'Error with provided parameters; Date string must be in format yyyy-mm-dd.'
+                });
             }
         };
     }
@@ -310,22 +328,53 @@ export default class BtagAPI {
         };
 
         if (params.from === undefined) {
-            throw new Error("You must specify the 'from' parameter.");
-        } else if (params.to === undefined) {
-            throw new Error("You must include the 'to' parameter.");
-        } else if (params.html === undefined) {
-            throw new Error("You must include the 'html' parameter.");
-        } else if (params.text === undefined) {
+            callback({
+                statusCode: 400,
+                error: 'Bad Request',
+                message: "You must specify the 'from' parameter."
+            });
+            return;
+        }
+
+        if (params.to === undefined) {
+            callback({
+                statusCode: 400,
+                error: 'Bad Request',
+                message: "You must specify the 'to' parameter."
+            });
+            return;
+        }
+
+        if (params.html === undefined) {
+            callback({
+                statusCode: 400,
+                error: 'Bad Request',
+                message: "You must include the 'html' parameter."
+            });
+            return;
+        }
+
+        if (params.text === undefined) {
             data.body = params.text;
         }
 
         if (params.to.split(',') > 1) {
-            throw new Error('You can only specify one recipient address.');
+            callback({
+                statusCode: 400,
+                error: 'Bad Request',
+                message: 'You can only specify one recipient address.'
+            });
+            return;
         }
 
         if (params.attachments !== undefined) {
             if (params.attachments.constructor !== Array) {
-                throw new Error('Attachments must be an array.');
+                callback({
+                    statusCode: 400,
+                    error: 'Bad Request',
+                    message: 'Attachments must be an array.'
+                });
+                return;
             }
         }
 
@@ -373,7 +422,13 @@ export default class BtagAPI {
             }
         ], (err, messageSource) => {
             if (err) {
-                throw err;
+                callback({
+                    statusCode: 500,
+                    error: 'Internal Error',
+                    message: err
+                });
+
+                return;
             }
 
             // return Mime message as base64 encoded string
