@@ -20,7 +20,7 @@ export default class BtagAPI {
         this._id = id;
         this._key = key;
         this._requests = {};
-        this._baseUrl = (staging) ? 'http://localhost:8080/' : 'https://api.bananatag.com/';
+        this._baseUrl = (staging) ? 'http://member.staging.bananatag.com:8080/' : 'https://api.bananatag.com/';
 
 
         /**
@@ -116,8 +116,8 @@ export default class BtagAPI {
                 }
 
                 this._requests[session].params = data;
-                this._requests[session].next = update.cursors.next;
-                this._requests[session].prev = update.cursors.prev;
+                this._requests[session].next = (update.cursors.next === update.cursors.total) ? 0 : update.cursors.next;
+                this._requests[session].prev = update.cursors.previous;
             }
 
             if (this._requests[session].total !== undefined) {
