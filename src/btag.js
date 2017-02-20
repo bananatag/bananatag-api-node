@@ -20,7 +20,7 @@ export default class BtagAPI {
         this._id = id;
         this._key = key;
         this._requests = {};
-        this._baseUrl = (staging) ? 'http://member.staging.bananatag.com:8080/' : 'https://api.bananatag.com/';
+        this._baseUrl = (staging) ? 'http://localhost:8080/' : 'https://api.bananatag.com/';
 
 
         /**
